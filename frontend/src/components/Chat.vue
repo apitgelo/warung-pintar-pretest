@@ -5,7 +5,7 @@
         <div id="chat-container" class="card">
           <div
             class="card-header text-white text-center font-weight-bold subtle-blue-gradient"
-          >Share the page URL to invite new friends</div>
+          >Simple Chat</div>
 
           <div class="card-body">
             <div class="container chat-body" ref="toolbarChat">
