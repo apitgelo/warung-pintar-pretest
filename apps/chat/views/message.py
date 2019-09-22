@@ -37,9 +37,14 @@ class MessageViewSet(viewsets.ModelViewSet):
                 ssl=True
             )
 
-            channels_client.trigger('my-channel', 'my-event', {'message': message.text})
+            response = {
+                'detail': 'Success',
+                'text': message.text
+            }
 
-            return Response({'detail': 'Success', 'text': message.text}, status=status.HTTP_200_OK)
+            channels_client.trigger('chatting', 'message', response)
+
+            return Response(response, status=status.HTTP_200_OK)
         else:
             raise serializers.ValidationError(serializer.errors)
 
