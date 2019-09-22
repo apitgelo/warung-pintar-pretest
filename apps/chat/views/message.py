@@ -9,7 +9,7 @@ from ..serializers import MessageSerializer
 
 
 class MessageViewSet(viewsets.ModelViewSet):
-    queryset = Message.objects.order_by("id")
+    queryset = Message.objects.order_by("-id")
     serializer_class = MessageSerializer
 
     def get_serializer_class(self):
