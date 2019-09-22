@@ -58,6 +58,7 @@ const $ = window.jQuery;
 export default {
   data() {
     return {
+      messageLoad: false,
       offset: 0,
       messages: [],
       text: ""
@@ -79,6 +80,7 @@ export default {
         `http://localhost:8000/api/chats/?limit=10&offset=` + this.offset,
         data => {
           this.messages.push.apply(this.messages, data.results);
+          this.messageLoad = true;
         }
       ).fail(response => {
         alert(response.responseText);
@@ -88,6 +90,7 @@ export default {
     listen() {
       channel.bind("message", data => {
         this.messages.unshift(data);
+        this.messageLoad = false;
       });
     },
 
@@ -103,7 +106,11 @@ export default {
   },
 
   updated() {
-    this.$refs.toolbarChat.scrollTop = this.$refs.toolbarChat.scrollHeight;
+    if (this.messageLoad) {
+      this.$refs.toolbarChat.scrollTop = 0;
+    } else {
+      this.$refs.toolbarChat.scrollTop = this.$refs.toolbarChat.scrollHeight;
+    }
   },
 
   beforeMount() {
