@@ -71,7 +71,7 @@ export default {
     },
     listen() {
       channel.bind("message", data => {
-        this.messages.push(data);
+        this.messages.unshift(data);
       });
     },
     postMessage(event) {
