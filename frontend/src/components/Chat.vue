@@ -43,6 +43,13 @@
 </template>
 
 <script>
+var pusher = new Pusher("374c69e5a5679fd521b4", {
+  cluster: "ap1",
+  forceTLS: true
+});
+
+var channel = pusher.subscribe("chatting");
+
 const $ = window.jQuery;
 
 export default {
@@ -62,18 +69,23 @@ export default {
         alert(response.responseText);
       });
     },
+    listen() {
+      channel.bind("message", data => {
+        this.messages.push(data);
+      });
+    },
     postMessage(event) {
       const data = { text: this.text };
 
       $.post(`http://localhost:8000/api/chats/`, data, data => {
-        this.messages.push(data);
-        this.text = ""; // clear the text after sending
+        this.text = "";
       }).fail(response => {
         alert(response.responseText);
       });
     }
   },
   beforeMount() {
+    this.listen();
     this.getMessages();
   }
 };
