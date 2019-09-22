@@ -1,3 +1,4 @@
+import pusher
 from rest_framework import viewsets, serializers, status
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
@@ -26,9 +27,19 @@ class MessageViewSet(viewsets.ModelViewSet):
         serializer = serializer(data=request.data)
 
         if serializer.is_valid():
-            meeting = Message.objects.create(text=serializer.validated_data["text"])
+            message = Message.objects.create(text=serializer.validated_data["text"])
 
-            return Response({'detail': 'Success', 'text': meeting.text}, status=status.HTTP_200_OK)
+            channels_client = pusher.Pusher(
+                app_id='866721',
+                key='374c69e5a5679fd521b4',
+                secret='a4860685791e6ef41792',
+                cluster='ap1',
+                ssl=True
+            )
+
+            channels_client.trigger('my-channel', 'my-event', {'message': message.text})
+
+            return Response({'detail': 'Success', 'text': message.text}, status=status.HTTP_200_OK)
         else:
             raise serializers.ValidationError(serializer.errors)
 

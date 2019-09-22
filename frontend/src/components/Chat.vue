@@ -9,7 +9,11 @@
 
           <div class="card-body">
             <div class="container chat-body">
-              <div v-for="message in messages" :key="message.id" class="row chat-section">
+              <div
+                v-for="message in messages.slice().reverse()"
+                :key="message.id"
+                class="row chat-section"
+              >
                 <div class="col-sm-2">
                   <img class="rounded-circle" :src="`http://placehold.it/40/333333/fff&text=H`" />
                 </div>
