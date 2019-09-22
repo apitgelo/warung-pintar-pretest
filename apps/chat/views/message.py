@@ -8,7 +8,7 @@ from ..serializers import MessageSerializer
 
 
 class MessageViewSet(viewsets.ModelViewSet):
-    queryset = Message.objects.order_by("-id")
+    queryset = Message.objects.order_by("id")
     serializer_class = MessageSerializer
 
     def get_serializer_class(self):
@@ -28,7 +28,7 @@ class MessageViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             meeting = Message.objects.create(text=serializer.validated_data["text"])
 
-            return Response({'detail': 'Success', 'meeting_id': meeting.text}, status=status.HTTP_200_OK)
+            return Response({'detail': 'Success', 'text': meeting.text}, status=status.HTTP_200_OK)
         else:
             raise serializers.ValidationError(serializer.errors)
 
