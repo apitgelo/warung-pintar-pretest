@@ -9,6 +9,9 @@
 
           <div class="card-body">
             <div class="container chat-body" ref="toolbarChat">
+              <div>
+                <button v-on:click="loadMessages" class="btn btn-info">Load older messages</button>
+              </div>
               <div
                 v-for="message in messages.slice().reverse()"
                 :key="message.id"
@@ -55,7 +58,7 @@ const $ = window.jQuery;
 export default {
   data() {
     return {
-      sessionStarted: false,
+      offset: 0,
       messages: [],
       text: ""
     };
@@ -69,11 +72,25 @@ export default {
         alert(response.responseText);
       });
     },
+
+    loadMessages(event) {
+      this.offset += 10;
+      $.get(
+        `http://localhost:8000/api/chats/?limit=10&offset=` + this.offset,
+        data => {
+          this.messages.push.apply(this.messages, data.results);
+        }
+      ).fail(response => {
+        alert(response.responseText);
+      });
+    },
+
     listen() {
       channel.bind("message", data => {
         this.messages.unshift(data);
       });
     },
+
     postMessage(event) {
       const data = { text: this.text };
 
@@ -84,9 +101,11 @@ export default {
       });
     }
   },
+
   updated() {
     this.$refs.toolbarChat.scrollTop = this.$refs.toolbarChat.scrollHeight;
   },
+
   beforeMount() {
     this.listen();
     this.getMessages();
