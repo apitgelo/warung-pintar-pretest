@@ -1,5 +1,6 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, serializers, status
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.response import Response
 
 from ..models.message import Message
 
@@ -17,4 +18,17 @@ class MessageViewSet(viewsets.ModelViewSet):
         paginator = LimitOffsetPagination()
         queryset = paginator.paginate_queryset(self.queryset, request)
         serializer = MessageSerializer(queryset, many=True)
+
         return paginator.get_paginated_response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer_class()
+        serializer = serializer(data=request.data)
+
+        if serializer.is_valid():
+            meeting = Message.objects.create(text=serializer.validated_data["text"])
+
+            return Response({'detail': 'Success', 'meeting_id': meeting.text}, status=status.HTTP_200_OK)
+        else:
+            raise serializers.ValidationError(serializer.errors)
+
