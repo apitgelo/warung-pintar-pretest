@@ -8,7 +8,7 @@
           >Share the page URL to invite new friends</div>
 
           <div class="card-body">
-            <div class="container chat-body">
+            <div class="container chat-body" ref="toolbarChat">
               <div
                 v-for="message in messages.slice().reverse()"
                 :key="message.id"
@@ -83,6 +83,9 @@ export default {
         alert(response.responseText);
       });
     }
+  },
+  updated() {
+    this.$refs.toolbarChat.scrollTop = this.$refs.toolbarChat.scrollHeight;
   },
   beforeMount() {
     this.listen();
