@@ -50,18 +50,14 @@ export default {
     };
   },
 
-  created() {
-    this.username = sessionStorage.getItem("username");
-
-    // Setup headers for all requests
-    $.ajaxSetup({
-      headers: {
-        Authorization: `Token ${sessionStorage.getItem("authToken")}`
-      }
-    });
-  },
-
   methods: {
+    getMessages(event) {
+      $.get(`http://localhost:8000/api/chats/`, data => {
+        this.messages = data.results;
+      }).fail(response => {
+        alert(response.responseText);
+      });
+    },
     postMessage(event) {
       const data = { text: this.text };
 
@@ -72,6 +68,9 @@ export default {
         alert(response.responseText);
       });
     }
+  },
+  beforeMount() {
+    this.getMessages();
   }
 };
 </script>
