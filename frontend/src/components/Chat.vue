@@ -9,63 +9,22 @@
 
           <div class="card-body">
             <div class="container chat-body">
-              <div class="row chat-section">
+              <div v-for="message in messages" :key="message.id" class="row chat-section">
                 <div class="col-sm-2">
-                  <img class="rounded-circle" src="http://placehold.it/40/f16000/fff&text=D" />
+                  <img class="rounded-circle" :src="`http://placehold.it/40/333333/fff&text=H`" />
                 </div>
-                <div class="col-sm-7">
-                  <span class="card-text speech-bubble speech-bubble-peer">Hello!</span>
-                </div>
-              </div>
-              <div class="row chat-section">
-                <div class="col-sm-7 offset-3">
-                  <span
-                    class="card-text speech-bubble speech-bubble-user float-right text-white subtle-blue-gradient"
-                  >Whatsup, another chat app?</span>
-                </div>
-                <div class="col-sm-2">
-                  <img class="rounded-circle" src="http://placehold.it/40/333333/fff&text=A" />
-                </div>
-              </div>
-              <div class="row chat-section">
-                <div class="col-sm-2">
-                  <img class="rounded-circle" src="http://placehold.it/40/f16000/fff&text=D" />
-                </div>
-                <div class="col-sm-7">
-                  <p class="card-text speech-bubble speech-bubble-peer">
-                    Yes this is Chatire, it's pretty cool and it's Open source
-                    and it was built with Django and Vue JS so we can tweak it to our satisfaction.
-                  </p>
-                </div>
-              </div>
-              <div class="row chat-section">
-                <div class="col-sm-7 offset-3">
-                  <p
-                    class="card-text speech-bubble speech-bubble-user float-right text-white subtle-blue-gradient"
-                  >Okay i'm already hacking around let me see what i can do to this thing.</p>
-                </div>
-                <div class="col-sm-2">
-                  <img class="rounded-circle" src="http://placehold.it/40/333333/fff&text=A" />
-                </div>
-              </div>
-              <div class="row chat-section">
-                <div class="col-sm-7 offset-3">
-                  <p
-                    class="card-text speech-bubble speech-bubble-user float-right text-white subtle-blue-gradient"
-                  >We should invite james to see this.</p>
-                </div>
-                <div class="col-sm-2">
-                  <img class="rounded-circle" src="http://placehold.it/40/333333/fff&text=A" />
+                <div>
+                  <span class="card-text speech-bubble speech-bubble-peer">{{ message.text }}</span>
                 </div>
               </div>
             </div>
           </div>
 
           <div class="card-footer text-muted">
-            <form>
+            <form @submit.prevent="postMessage">
               <div class="row">
                 <div class="col-sm-10">
-                  <input type="text" placeholder="Type a message" />
+                  <input v-model="text" type="text" placeholder="Type a message" />
                 </div>
                 <div class="col-sm-2">
                   <button class="btn btn-primary">Send</button>
@@ -78,6 +37,44 @@
     </div>
   </div>
 </template>
+
+<script>
+const $ = window.jQuery;
+
+export default {
+  data() {
+    return {
+      sessionStarted: false,
+      messages: [],
+      text: ""
+    };
+  },
+
+  created() {
+    this.username = sessionStorage.getItem("username");
+
+    // Setup headers for all requests
+    $.ajaxSetup({
+      headers: {
+        Authorization: `Token ${sessionStorage.getItem("authToken")}`
+      }
+    });
+  },
+
+  methods: {
+    postMessage(event) {
+      const data = { text: this.text };
+
+      $.post(`http://localhost:8000/api/chats/`, data, data => {
+        this.messages.push(data);
+        this.text = ""; // clear the text after sending
+      }).fail(response => {
+        alert(response.responseText);
+      });
+    }
+  }
+};
+</script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
