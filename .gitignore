@@ -3,3 +3,4 @@ __pycache__/
 *local_settings.py*
 *sqlite*
 frontend/node_modules/
+static/
