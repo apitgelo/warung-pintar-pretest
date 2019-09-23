@@ -67,7 +67,7 @@ export default {
 
   methods: {
     getMessages(event) {
-      $.get(`http://localhost:8000/api/chats/`, data => {
+      $.get(`http://35.247.138.245/api/chats/`, data => {
         this.messages = data.results;
       }).fail(response => {
         alert(response.responseText);
@@ -77,7 +77,7 @@ export default {
     loadMessages(event) {
       this.offset += 10;
       $.get(
-        `http://localhost:8000/api/chats/?limit=10&offset=` + this.offset,
+        `http://35.247.138.245/api/chats/?limit=10&offset=` + this.offset,
         data => {
           this.messages.push.apply(this.messages, data.results);
           this.messageLoad = true;
@@ -97,7 +97,7 @@ export default {
     postMessage(event) {
       const data = { text: this.text };
 
-      $.post(`http://localhost:8000/api/chats/`, data, data => {
+      $.post(`http://35.247.138.245/api/chats/`, data, data => {
         this.text = "";
       }).fail(response => {
         alert(response.responseText);
