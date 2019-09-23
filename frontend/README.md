@@ -1,4 +1,4 @@
-# django-rabbitmq-fe
+# warung-pintar-pretest-frontend
 
 > A Vue.js project
 
