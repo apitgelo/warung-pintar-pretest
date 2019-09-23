@@ -12,7 +12,7 @@ SECRET_KEY = '*%$&ez=xp2#5cj*#igp(isum2j$)m9e=&61jnuyj2ud+k94e7!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['35.247.138.245']
 
 CORS_ORIGIN_ALLOW_ALL = True
 
